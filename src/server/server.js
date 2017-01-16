@@ -4,6 +4,9 @@ import express from "express";
 import http from "http";
 import socketIo from "socket.io";
 import chalk from "chalk";
+import { Observable } from "rxjs";
+
+import { ObservableSocket } from "shared/observable-socket";
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -56,6 +59,12 @@ app.get("/", (request, response) => {
 // socket
 io.on("connection", socket => {
 	console.log(`got connection from: ${socket.request.connection.remoteAddress}`);
+
+	const client = new ObservableSocket(socket);
+
+	client.onAction("login", () => {
+		return Observable.of("user").delay(3000);
+	});
 });
 
 // startup

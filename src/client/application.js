@@ -2,13 +2,15 @@ import "./application.scss";
 import * as services from "./services";
 
 // playgroud
-services.server.on$("test")
-	.map(d => d + " transformed")
-	.subscribe(item => {
-		console.log(`Got ${item} from server`);
-	});
+window.setTimeout(() => {
+	services.server.emitAction$("login", { username: "foo" })
+		.subscribe(result => {
+			console.log("logged in", result);
+		}, error => {
+			console.error(error);
+		});
+}, 1000);
 
-services.server.status$.subscribe(state => console.log(state));
 
 // auth
 
