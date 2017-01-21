@@ -29,7 +29,7 @@ html, body {
 body {
 	background: $background;
 	color: $color;
-	font-size: 9px;
+	font-size: 14px;
 	font-family: arial, halvetica, sans-serif;
 }
 
@@ -82,7 +82,7 @@ body {
 		margin: 0;
 		font-weight: normal;
 		color: lighten($color, 10%);
-		font-size: 9px;
+		font-size: 14px;
 		text-transform: lowercase;
 		flex-shrink: 0;
 

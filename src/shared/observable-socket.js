@@ -63,7 +63,7 @@ export class ObservableSocket {
 	}
 
 	_registerCallbacks(action) {
-		console.log(`this, ${this}`);
+		
 		if (this._actionCallbacks.hasOwnProperty(action)) {
 			return;
 		}

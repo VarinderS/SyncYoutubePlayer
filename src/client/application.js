@@ -15,6 +15,10 @@ window.setTimeout(() => {
 // auth
 
 // components
+require("./components/player/player");
+require("./components/users/users");
+require("./components/chat/chat");
+require("./components/playlist/playlist");
 
 // bootstrap
 services.socket.connect();
