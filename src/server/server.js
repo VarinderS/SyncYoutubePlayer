@@ -8,6 +8,10 @@ import { Observable } from "rxjs";
 
 import { ObservableSocket } from "shared/observable-socket";
 
+import { UsersModule } from "./modules/users";
+import { PlaylistModule } from "./modules/playlist";
+import { ChatModule } from "./modules/chat";
+
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 // setup
@@ -53,8 +57,15 @@ app.get("/", (request, response) => {
 	});
 });
 
-// modules
+// services
+const videoServices = [];
+const playlistRepository = {};
 
+// modules
+const users = new UsersModule(io);
+const chat = new ChatModule(io, users);
+const playlist = new PlaylistModule(io, users, playlistRepository, videoServices);
+const modules = [users, chat, playlist];
 
 // socket
 io.on("connection", socket => {
@@ -62,9 +73,13 @@ io.on("connection", socket => {
 
 	const client = new ObservableSocket(socket);
 
-	client.onAction("login", () => {
-		return Observable.of("user").delay(3000);
-	});
+	for (let mod of modules) {
+		mod.registerClient(client);
+	}
+
+	for (let mod of modules) {
+		mod.clientRegistered(client);
+	}
 });
 
 // startup
@@ -76,4 +91,14 @@ function startServer() {
 	});
 }
 
-startServer();
+Observable.merge(...modules.map(m => m.init$()))
+	.subscribe({
+		complete() {
+			startServer();
+		},
+		error(error) {
+			console.error(`could not init module: ${error.stack || error}`)
+		}
+	});
+
+// startServer();
