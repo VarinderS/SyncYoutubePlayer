@@ -14,8 +14,6 @@ export class ObservableSocket {
 	get isTotallyDead() { return !this.isConntected && !this.isReconnecting; }
 
 	constructor(socket) {
-		console.log(`this in constructor, ${this}`);
-		console.log(`socket initialized`);
 		this._socket = socket;
 		this._state = {};
 		this._actionCallbacks = {};
@@ -56,7 +54,6 @@ export class ObservableSocket {
 		this._registerCallbacks(action);
 
 		const subject = this._requests[id] = new ReplaySubject(1);
-		console.log(`args: ${arg}`, arg);
 		this._socket.emit(action, arg, id);
 
 		return subject;

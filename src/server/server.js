@@ -6,6 +6,7 @@ import socketIo from "socket.io";
 import chalk from "chalk";
 import { Observable } from "rxjs";
 
+import "shared/operators";
 import { ObservableSocket } from "shared/observable-socket";
 
 import { UsersModule } from "./modules/users";
@@ -97,7 +98,7 @@ Observable.merge(...modules.map(m => m.init$()))
 			startServer();
 		},
 		error(error) {
-			console.error(`could not init module: ${error.stack || error}`)
+			console.error(`could not init module: ${error.stack || error}`);
 		}
 	});
 

@@ -1,3 +1,4 @@
+import "shared/operators";
 import "./application.scss";
 import * as services from "./services";
 
@@ -23,5 +24,8 @@ require("./components/playlist/playlist");
 // bootstrap
 services.socket.connect();
 
-services.server.emitAction$("users:list")
-	.subscribe(users => console.log(users));
+services.server.emitAction$("users:list").subscribe((users) => { console.log(users); });
+
+services.usersStore.state$.subscribe(state => {
+	console.log(state);
+});
