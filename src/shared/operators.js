@@ -1,4 +1,4 @@
-import { Observable } from "Rxjs";
+import { Observable } from "rxjs";
 
 Observable.prototype.safeSubscribe = function(next, error, complete) {
 	const subscription = this.subscribe(
