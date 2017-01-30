@@ -1,3 +1,4 @@
+import $ from "jquery";
 import "shared/operators";
 import "./application.scss";
 import * as services from "./services";
@@ -14,6 +15,16 @@ window.setTimeout(() => {
 
 
 // auth
+const $html = $("html");
+services.usersStore.currentUser$.subscribe(user => {
+	if (user.isLoggedIn) {
+		$html.removeClass("not-logged-in");
+		$html.addClass("logged-in");
+	} else {
+		$html.addClass("not-logged-in");
+		$html.removeClass("logged-in");
+	}
+});
 
 // components
 require("./components/player/player");
@@ -23,8 +34,3 @@ require("./components/playlist/playlist");
 
 // bootstrap
 services.socket.connect();
-
-services.usersStore.login$("whoa")
-	.subscribe(user => {
-		console.log(user);
-	});

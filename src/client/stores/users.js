@@ -3,6 +3,9 @@ import { Observable } from "rxjs";
 import { validateLogin } from "shared/validation/users";
 
 export class UsersStore {
+	get currentUser() { return this._currentUser; }
+	get isLoggedIn() { return this._currentUser && this._currentUser.isLoggedIn; }
+
 	constructor(server) {
 		this._server = server;
 		
@@ -10,7 +13,8 @@ export class UsersStore {
 		const defaultStore = { users: [] };
 		const events$ = Observable.merge(
 			this._server.on$("users:list").map(opList),
-			this._server.on$("users:added").map(opAdd)
+			this._server.on$("users:added").map(opAdd),
+			this._server.on$("users:removed").map(opRemove)
 		);
 
 		this.state$ = events$.scan(function(last, op) {
@@ -19,6 +23,16 @@ export class UsersStore {
 		.publishReplay(1);
 
 		this.state$.connect();
+
+		// auth
+		this.currentUser$ = Observable.merge(
+			this._server.on$("auth:login"),
+			this._server.on$("auth:logout").mapTo({}))
+			.startWith({})
+			.publishReplay(1)
+			.refCount();
+		
+		this.currentUser$.subscribe(user => this._currentUser = user);
 
 		// bootstrap
 		this._server.on("connect", () => {
@@ -33,6 +47,10 @@ export class UsersStore {
 		}
 
 		return this._server.emitAction$("auth:login", {name});
+	}
+
+	logout$() {
+		return this._server.emitAction$("auth:logout");
 	}
 }
 
@@ -59,6 +77,22 @@ function opAdd(user) {
 
 		return {
 			type: "add",
+			user: user,
+			state: state
+		};
+	};
+}
+
+function opRemove(user) {
+	return state => {
+		const index = _.findIndex(state.users, { name: user.name });
+
+		if (index !== -1) {
+			state.users.splice(index, 1);
+		}
+
+		return {
+			type: "remove",
 			user: user,
 			state: state
 		};

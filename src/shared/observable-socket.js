@@ -113,6 +113,7 @@ export class ObservableSocket {
 				const value = callback(arg);
 				if (!value) {
 					this._socket.emit(action, null, requestId);
+					return;
 				}
 
 				if (typeof(value.subscribe) !== "function") {
