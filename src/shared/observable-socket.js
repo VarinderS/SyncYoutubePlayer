@@ -145,7 +145,7 @@ export class ObservableSocket {
 			}
 			catch (error) {
 				if (requestId) {
-					this._emitError(action, requestId, error);
+					this._emitError(action, error, requestId);
 				}
 				console.error(error.stack || error);
 			}
@@ -161,7 +161,7 @@ export class ObservableSocket {
 		}
 	}
 
-	_emitError(action, requestId, error) {
+	_emitError(action, error, requestId) {
 		const message = (error && error.clientMessage) || "Fatal error";
 		this._socket.emit(`${action}:fail`, { message }, requestId);
 	}

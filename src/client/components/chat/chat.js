@@ -2,12 +2,15 @@ import $ from "jquery";
 import { ComponentBase } from "../../lib/component";
 import "./chat.scss";
 
+import { usersStore } from "../../services";
+
 import { ChatListComponent } from "./list";
 import { ChatFormComponent } from "./form";
 
 class ChatComponent extends ComponentBase {
-	constructor() {
+	constructor(usersStore) {
 		super();
+		this._users = usersStore;
 	}
 
 	_onAttach() {
@@ -18,7 +21,7 @@ class ChatComponent extends ComponentBase {
 		list.attach(this._$mount);
 		this.children.push(list);
 
-		const form = new ChatFormComponent();
+		const form = new ChatFormComponent(this._users);
 		form.attach(this._$mount);
 		this.children.push(form);
 	}
@@ -26,7 +29,7 @@ class ChatComponent extends ComponentBase {
 let component;
 
 try {
-	component = new ChatComponent();
+	component = new ChatComponent(usersStore);
 	component.attach($("section.chat"));
 } catch (e) {
 	console.error(e);
