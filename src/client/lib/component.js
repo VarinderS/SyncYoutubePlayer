@@ -55,7 +55,7 @@ export class ElementComponent extends ComponentBase {
 
 	_setClass(className, isOn) {
 		if (isOn) {
-			this._$element.addClasss(className);
+			this._$element.addClass(className);
 		} else {
 			this._$element.removeClass(className);
 		}
