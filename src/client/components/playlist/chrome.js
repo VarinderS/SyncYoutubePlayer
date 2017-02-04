@@ -31,13 +31,13 @@ export class PlaylistChromeComponent extends ComponentBase {
 		let lastSource;
 		this._playlist.state$
 			.filter(a => a.type == "current")
-			.compSubscribe(this, ({state}) => {
+			.compSubscribe(this, ({state, type}) => {
 				const source = state.current.source;
 				if (!source) {
 					return;
 				}
 
-				if (source == lastSource) {
+				if (source == lastSource && type != "move") {
 					return;
 				}
 
