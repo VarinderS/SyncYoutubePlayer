@@ -25,6 +25,20 @@ section.playlist {
 	}
 }
 
+// chrome
+section.playlist .playing-indicator {
+	z-index: 200;
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	background: #ffb000;
+	right: -6px;
+	margin-top: 5px;
+	top: 0;
+	pointer-events: none;
+	border-radius: 50px;
+}
+
 // toolbar
 html.not-logged-in section.playlist .toolbar {
 	display: none;
